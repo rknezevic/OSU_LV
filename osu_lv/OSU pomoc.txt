@@ -11,7 +11,13 @@ delimiter i skiprows su opcionalni argumenti, delimiter je znak koji označava s
 ucitivanje podatkovnog skupa s pandas
 -- data_df = pd.DataFrame(data)
 
+-- NAKON STO IZMJENIMO NUMPY SKUP, POTREBNO JE IZMIJENITI I PANDAS!!!
+isti kod kao ovaj gore
+
 -- data.shape[0] - vraća broj redaka, npr trebamo broj ljudi, kad ucitavamo podatke, preskocimo prvi redak i s ovom komandom nam da broj redaka, odnosno broj ljudi NUMPY
+
+-- data_df = data_df.dropna(axis = 0) --axis = 0 brise cijeli redak
+-- data_df = data_df.drop_duplicates() brisanje duplikata
 
 -- data.shape[1] - vraća broj stupaca NUMPY
 
