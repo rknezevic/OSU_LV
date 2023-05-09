@@ -1,0 +1,198 @@
+pip install (-U) numpy --user
+pip install (-U) matplotlib --user
+pip install (-U) pandas --user
+pip install (-U) scikit-learn --user
+pip install (-U) tensorflow --user
+
+ucitavanje podatkovnog skupa s numpy
+-- data = np.loadtxt('naziv.csv', delimiter=',', skiprows=1) 
+delimiter i skiprows su opcionalni argumenti, delimiter je znak koji označava separator, a skiprows označava koliko redova preskacemo, u ovom slucaju samo prvi
+
+ucitivanje podatkovnog skupa s pandas
+-- data_df = pd.DataFrame(data)
+
+-- data.shape[0] - vraća broj redaka, npr trebamo broj ljudi, kad ucitavamo podatke, preskocimo prvi redak i s ovom komandom nam da broj redaka, odnosno broj ljudi NUMPY
+
+-- data.shape[1] - vraća broj stupaca NUMPY
+
+#za scatter se koristi numpy datoteka, za skoro sve ostalo ide pandas
+
+-- prvih50podataka = data[:50, 1] #vrijedi samo ako je skup sortiran NUMPY
+-- zadnjih50podataka = data[:-50, 1] #vrijedi samo ako je skup sortiran NUMPY
+
+*arr = np.array
+
+-- arr_sorted = np.sort(arr, axis=0) --sortiranje niza po prvom stupcu, ako je visedimenzionalna tablica sto ce i biti
+
+-- arr_sorted = np.sort(arr)
+   
+-- data_np_sorted = data_np[data_np[:, 2].argsort()[::-1]] -- sortiranje po trećem stupcu po silaznom redoslijedu ( [::-1] )
+
+
+-- Ispis tri prva i tri zadnja člana, odnosno prva tri su najveca a zadnja tri su najmanja, na taj način trazimo najveće nešto i najmanje nešto, na način da prvo sortiramo pa ih uzimamo ovako
+	print(data_np_sorted[:3])
+	print(data_np_sorted[-3:])
+
+-- U numpy-u, stupci se indeksiraju brojevima, a ne nazivima stupaca kao u pandasu. Stoga smo umjesto naziva stupaca "Engine Size (L)" i "CO2 Emissions (g/km)" koristili indekse 3 i 12, koji se odnose na te stupce u nizu podataka.
+
+-- engine_extracted = data[(data[:, 3] >= 2.5) & (data[:, 3] <= 3.5)] --velicina izmedu 2.5 i 3.5
+-- print(len(engine_data))
+
+-- print("CO2: ", engine_extracted[:, 12].mean()) -- aritmeticka sredina potrosnje CO2 od motora koji su izmedu 2.5 i 3.5
+
+
+npr. koliko ima audija od svih automobila, printam odma:
+	print(f"Broj audija:{np.count_nonzero(data[data[:, 0] == 'Audi'])} ")
+
+ -- print(f"Prosjecna emisija CO2 audija s 4 cilindra: 
+{(data[(data[:, 0]=='Audi') & (data[:, 4]==4)])[:, 11].mean()} (g/km)")
+""""
+import pandas as pd
+
+data = pd.read_csv(
+    'C:\\Users\\student\\Desktop\\lv3\\osu\\LV3\\data_C02_emission.csv')
+
+audi = data[data['Make'] == 'Audi']
+
+print(audi.count())
+
+audi_four_cylinders = audi[data['Cylinders'] == 4]
+
+print(audi_four_cylinders)
+
+co2_audi = audi_four_cylinders['CO2 Emissions (g/km)']
+
+co2_avg = co2_audi.mean()
+
+print(co2_avg)
+
+"""
+
+
+*Koliko je vozila s 4,6,8. . . cilindara? 
+Kolika je prosjecna emisija C02 plinova s obzirom na broj cilindara?*
+--
+cylinders = np.unique(data_np[:, 4])
+results = np.zeros((len(cylinders), 2))
+
+for i, c in enumerate(cylinders):
+    data_cylinder = data_np[data_np[:, 4] == c]
+    results[i, 0] = np.count_nonzero(data_cylinder[:, 0])
+    results[i, 1] = np.mean(data_cylinder[:, 12])
+
+print("Car count | CO2 Emissions (g/km)")
+for i, c in enumerate(cylinders):
+    print(f"{c:.0f}      | {results[i, 1]:.2f}")
+
+
+--koliko trose dizel auta, naci mean i medijan?
+diesel_cars = data_np[data_np[:, 9] == 'D']
+city_consumption = diesel_cars[:, 8].astype(float)
+print(f"Mean: {np.mean(city_consumption)}")
+print(f"Median: {np.median(city_consumption)}")
+
+print(f"Dizelski motor s najvecom potrosnjom koji ima 4 cilindra je: {data_np_sorted[(data_np_sorted[:, 4] == '4') & (data_np_sorted[:, 6] == 'D')][-1]}")
+
+# print(f"Broj vozila s manualnim mjenjačem: {np.sum(data_np[:,5].astype(str).str.startswith('M'))}")
+
+print(f"BROJ MANUALNIH VOZILA: { np.sum(np.char.startswith(data_np[:, 4].astype(str), 'M'))}")
+ --KORISTIMO "sum" kako bi izbrojali koliko mjenjača zapocinje s M i tako saznali je li manualni
+2. nacin -- len(data_np[data_np[:, 7] == 'M'])
+
+----
+# Učitavanje podataka iz CSV datoteke
+data_np = np.genfromtxt('filename.csv', delimiter=',', skip_header=True)
+
+# Grupiranje podataka po broju cilindara i izračunavanje prosječne vrijednosti emisije CO2
+grouped_cylinders = np.zeros((np.unique(data_np[:, 4]).size, data_np.shape[1]))
+for i, cyl in enumerate(np.unique(data_np[:, 4])):
+    cyl_data = data_np[data_np[:, 4] == cyl]
+    grouped_cylinders[i, :] = np.mean(cyl_data, axis=0)
+
+# Crtanje grafa
+plt.bar(grouped_cylinders[:, 4], grouped_cylinders[:, 13])
+plt.xlabel('Broj cilindara')
+plt.ylabel('CO2 emisija')
+plt.show()
+----
+
+
+data.dropna(axis=0)#kada je 0 briše REDOVE, a kad je 1 briše KOLONE u kojima su NULVRIJEDNOSTI
+
+print(f"Minimalni BMI je: { data_df[5].min() }")
+
+print(f"Minimalni BMI osobe koja ima dijabetes je : 
+{ data_df[data_df[8]==1][5].min() }")
+
+
+## potrebne biblioteke
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, recall_score, precision_score
+from tensorflow import keras
+from tensorflow.keras import layers
+from keras.models import load_model
+
+##
+
+**********************************************************************BITNO
+učitavanje novog dataseta:
+
+data_df = pd.DataFrame(data(numpy data koji je ucitan prije), columns=['kraci','nazivi','novih','stupaca'])
+
+#izbacivanje izlazne veličine
+X = data_df.drop(columns=['naziv stupca izlazne velicine']).to_numpy()
+
+#dodavanje izlazne velicine u y
+y = data_df['naziv stupca'].copy().to_numpy()
+
+
+#train test split, primjer za omjer 80%-20%
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=5)
+************************************************************************BITNO
+# logisticka regresija
+logReg_model = LogisticRegression(max_iter=300)
+logReg_model.fit(X_train, y_train)
+
+# klasifikacija skupa podataka
+y_predictions = logReg_model.predict(X_test)
+
+#matrica konfuzije
+disp = ConfusionMatrixDisplay(confusion_matrix(y_test, y_predictions))
+disp.plot()
+plt.show()
+
+# tocnost preciznost i odziv
+print(f'Tocnost: {accuracy_score(y_test, y_predictions)}')
+print(f'Preciznost: {precision_score(y_test, y_predictions)}')
+print(f'Odziv: {recall_score(y_test, y_predictions)}')
+
+
+#ucenje mreze
+
+history = model.fit(X_train, y_train, batch_size=##,
+                    epochs=##, validation_split=0.1)
+
+#spremanje modela
+model.save('Model/')
+
+
+#evaluacija mreze
+model = load_model('Model/')
+score = model.evaluate(X_test, y_test, verbose=0)
+for i in range(len(model.metrics_names)):
+    print(f'{model.metrics_names[i]} = {score[i]}')
+
+
+#predikcija modela i display confusion matrice
+y_predictions = model.predict(X_test)
+y_predictions = np.around(y_predictions).astype(np.int32)
+cm = confusion_matrix(y_test, y_predictions)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()
