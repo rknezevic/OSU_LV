@@ -8,23 +8,18 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from keras.models import load_model
 
-##################################################
-# 1. zadatak
-##################################################
-
 # učitavanje dataseta
 data = np.loadtxt('pima-indians-diabetes.csv', delimiter=',', skiprows=9)
-# a)
 print(f'Broj mjerenja: {len(data)}')
 
-# b)
+
 data_df = pd.DataFrame(data)
 print(f'Broj dupliciranih: {data_df.duplicated().sum()}')
 print(f'Broj izostalih: {data_df.isnull().sum()} ')
 data_df = data_df.drop_duplicates()
-data_df = data_df.dropna(axis=0) #trebalo je i izbacit sve 0 iz BMI
-data = data[data[:,5]!=0.0] #ovo je falilo, izbacivanje sve s 0.0 BMI
-data_df = pd.DataFrame(data) #kreiranje ponovno data_df ali ovaj put s očišćenim podacima bez redaka s BMI 0.0
+data_df = data_df.dropna(axis=0)
+ #ovo je falilo, izbacivanje sve s 0.0 BMI
+data_df = pd.DataFrame(data) 
 print(f'Broj preostalih: {len(data_df)}') 
 
 # c)
