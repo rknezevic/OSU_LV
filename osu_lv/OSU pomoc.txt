@@ -18,11 +18,12 @@ isti kod kao ovaj gore
 
 -- data_df = data_df.dropna(axis = 0) --axis = 0 brise cijeli redak
 -- data_df = data_df.drop_duplicates() brisanje duplikata
-
+-- data = data[data[:,5]!=0.0]
 -- data.shape[1] - vraća broj stupaca NUMPY
 
 #za scatter se koristi numpy datoteka, za skoro sve ostalo ide pandas
-
+-- npr: ... plt.scatter(x=data[:, broj stupca], y=data[:, broj stupca])
+-- print(f': {data_df[data_df[8]==1][5].max()}')
 -- prvih50podataka = data[:50, 1] #vrijedi samo ako je skup sortiran NUMPY
 -- zadnjih50podataka = data[:-50, 1] #vrijedi samo ako je skup sortiran NUMPY
 
@@ -171,16 +172,24 @@ y_predictions = logReg_model.predict(X_test)
 #matrica konfuzije
 disp = ConfusionMatrixDisplay(confusion_matrix(y_test, y_predictions))
 disp.plot()
-plt.show()
+plt.show() #broj TN je 89, TP 36, FN 18 i FP 11, model često osobe koje imaju dijabetes proglasi da nemaju
 
 # tocnost preciznost i odziv
 print(f'Tocnost: {accuracy_score(y_test, y_predictions)}')
 print(f'Preciznost: {precision_score(y_test, y_predictions)}')
 print(f'Odziv: {recall_score(y_test, y_predictions)}')
 
+#model mreze
 
+model = keras.Sequential()
+model.add(layers.Input(shape=(BROJ,)))
+model.add(layers.Dense(units=broj, activation="relu"))
+model.add(layers.Dense(units=broj, activation="relu"))
+model.add(layers.Dense(units=broj, activation="tip_aktivacije"))
+model.summary()
+
+model.compile(loss, optimizer, metrics=["",])
 #ucenje mreze
-
 history = model.fit(X_train, y_train, batch_size=##,
                     epochs=##, validation_split=0.1)
 
